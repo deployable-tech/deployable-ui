@@ -117,6 +117,7 @@ html, body {
   outline: none;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 .miniwin .titlebar {
   display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px;
@@ -178,8 +179,9 @@ html, body {
 .splash-card { width: 100%; max-width: 520px; }
 
 /* ===== Forms & Controls ===== */
-.form { display: grid; gap: 12px; }
-.form .row { display: grid; gap: 8px; }
+.form { display: grid; gap: 12px; width: 100%; }
+.form .row { display: grid; gap: 8px; grid-template-columns: auto 1fr; width: 100%; }
+.form .row > *:not(label) { width: 100%; }
 .form label { font-size: 12px; color: var(--muted); letter-spacing: .3px; }
 
 .input, .textarea {
@@ -258,6 +260,7 @@ html, body {
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  width: 100%;
 }
 .chat {
   display: flex;
@@ -286,13 +289,13 @@ html, body {
 .chat-window .chat-input .input { width: 100%; }
 
 /* ===== Text Editor ===== */
-.text-editor { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.text-editor { display: flex; flex-direction: column; height: 100%; min-height: 0; width: 100%; }
 .text-editor .editor-row { display: flex; flex: 1 1 auto; min-height: 0; }
 .text-editor textarea { flex: 1 1 auto; width: 100%; }
 
 /* ===== List View ===== */
-.list-view { display: flex; flex-direction: column; gap: 4px; }
-.lv-row { display: flex; align-items: center; gap: 8px; padding: 6px; border: 1px solid var(--border); border-radius: 8px; }
+.list-view { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.lv-row { display: flex; align-items: center; gap: 8px; padding: 6px; border: 1px solid var(--border); border-radius: 8px; width: 100%; }
 .lv-row.is-selected { background: var(--panel-sel); border-color: var(--accent); }
 .lv-avatar { flex: 0 0 auto; }
 .lv-main { flex: 1 1 auto; }
