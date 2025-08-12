@@ -1,4 +1,6 @@
 // ui.js — element factory + basic field registry (inputs + views)
+import { renderListView } from "./fields/list_view.js";
+import { renderFileUpload } from "./fields/file_upload.js";
 export function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -71,3 +73,6 @@ export const Field = {
     return r(cfg);
   }
 };
+
+Field.renderers["list_view"] = renderListView;
+Field.renderers["file_upload"] = renderFileUpload;

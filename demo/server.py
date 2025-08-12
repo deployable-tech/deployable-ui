@@ -64,10 +64,9 @@ def health():
     }
 
 
-# Lightweight function used by tests to verify the server module loads
-# correctly. This intentionally avoids any framework dependencies so it can be
-# called directly without running the ASGI app.
+
 def healthz():
+    """Backwards compatible health endpoint."""
     return {"status": "ok", "exists": True}
 
 

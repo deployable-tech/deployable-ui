@@ -1,6 +1,8 @@
 // window.js — registry + modal/resize helpers
 import { el } from "./ui.js";
 import { render as renderGeneric } from "./windows/window_generic.js";
+import { render as renderTextEditor } from "./windows/window_text_editor.js";
+import { render as renderChat } from "./windows/window_chat.js";
 
 // Built‑in window type registry. Consumers can register additional types
 // via the exported ``registerWindowType`` function.
@@ -9,6 +11,10 @@ const WindowTypes = { window_generic: renderGeneric };
 export function registerWindowType(name, renderer) {
   WindowTypes[name] = renderer;
 }
+
+// Register built‑in extensions
+registerWindowType("window_text_editor", renderTextEditor);
+registerWindowType("window_chat", renderChat);
 
 export function createMiniWindowFromConfig(config) {
   const winId = (() => {
@@ -19,6 +25,7 @@ export function createMiniWindowFromConfig(config) {
     return id;
   })();
   const win = el("div", { class: "miniwin", tabindex: "0", "data-id": winId, id: winId });
+  if (config.modalFade === false) win.dataset.modalFade = "false";
 
   const actions = el("div", { class: "actions" }, [
     el("button", { class: "icon-btn js-min", title: "Minimize", "aria-label": "Minimize", "data-win": winId }, ["—"])
@@ -73,17 +80,23 @@ export function createMiniWindowFromConfig(config) {
   return win;
 }
 
-export function mountModal(win) {
+export function mountModal(win, opts = {}) {
+  const { fade = true } = opts;
   const wrap = el("div", { class: "modal-wrap" });
-  const backdrop = el("div", { class: "modal-backdrop" });
-  wrap.append(backdrop, win);
+  if (fade) {
+    const backdrop = el("div", { class: "modal-backdrop" });
+    wrap.append(backdrop, win);
+  } else {
+    wrap.appendChild(win);
+  }
   document.body.appendChild(wrap);
   return wrap;
 }
 
 export function undockWindow(win, rect) {
   const r = rect || win.getBoundingClientRect();
-  mountModal(win);
+  const fade = win.dataset.modalFade !== "false";
+  mountModal(win, { fade });
   win.classList.add("modal");
   win.setAttribute("data-modal", "true");
   Object.assign(win.style, {

@@ -44,3 +44,68 @@ codex_startup.py - helper script to run tests and launch the demo
 
 The demo server will serve `demo/index.html` and related assets. Open your
 browser to `http://127.0.0.1:8000/` to view the demo.
+
+## Usage Examples
+
+### Text Editor Window
+
+```js
+import { createMiniWindowFromConfig } from "/static/js/window.js";
+
+createMiniWindowFromConfig({
+  window_type: "window_text_editor",
+  content: "Hello world",
+  onSave: ({ id, content }) => console.log(id, content)
+});
+```
+
+### List View Field
+
+```js
+import { Field } from "/static/js/ui.js";
+
+const list = Field.create({
+  type: "list_view",
+  items: [{ id: 1, name: "Alpha" }],
+  template: { title: (it) => it.name }
+});
+```
+
+### Chat Window
+
+```js
+createMiniWindowFromConfig({
+  window_type: "window_chat",
+  onSend: async (text) => ({ role: "assistant", content: "Echo: " + text })
+});
+```
+
+### File Upload Field
+
+```js
+import { Field } from "/static/js/ui.js";
+
+const uploader = Field.create({
+  type: "file_upload",
+  multiple: true,
+  buttonLabel: "Upload",
+  onUpload: (files) => console.log(files)
+});
+```
+
+### User Menu
+
+```js
+import { createUserMenu } from "/static/js/user_menu.js";
+
+const menu = createUserMenu({
+  name: "Demo User",
+  items: [
+    { label: "Account Settings", onClick: () => console.log("account") },
+    { label: "Logout", onClick: () => console.log("logout") }
+  ]
+});
+document.querySelector(".app-header .right").appendChild(menu);
+```
+
+To disable the backdrop when using modal windows, set `modalFade: false` in the window config.
