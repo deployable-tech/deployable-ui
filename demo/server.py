@@ -64,6 +64,13 @@ def health():
     }
 
 
+# Lightweight function used by tests to verify the server module loads
+# correctly. This intentionally avoids any framework dependencies so it can be
+# called directly without running the ASGI app.
+def healthz():
+    return {"status": "ok", "exists": True}
+
+
 if __name__ == "__main__":
     import uvicorn
 
