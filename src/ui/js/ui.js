@@ -65,8 +65,8 @@ export const Field = {
       return s;
     },
   },
-  create(cfg) {
-    const r = this.renderers[cfg.type];
+  create: (cfg) => {
+    const r = Field.renderers[cfg.type];
     if (!r) throw new Error(`Unknown field type: ${cfg.type}`);
     return r(cfg);
   }

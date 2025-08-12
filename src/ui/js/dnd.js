@@ -42,7 +42,7 @@ export function handleDrop(draggingWin, isModalDrag, columnsEl, cols, e, getDrop
     draggingWin.style.removeProperty("--drag-w");
     const targetCol = getDropColumnAt(e.clientX, e.clientY);
     if (targetCol) {
-      dockWindow(draggingWin);
+      dockWindow(draggingWin, targetCol);
       const btn = draggingWin.querySelector(".js-dock-toggle");
       if (btn) {
         btn.textContent = "⇱";
@@ -62,6 +62,7 @@ export function initWindowDnD() {
 
   let draggingWin = null;
   let isModalDrag = false;
+  let modalWrap = null;
   let winStart = { x: 0, y: 0 };
   let pointerStart = { x: 0, y: 0 };
 
@@ -78,7 +79,12 @@ export function initWindowDnD() {
     draggingWin = win;
     isModalDrag = win.classList.contains("modal");
     draggingWin.classList.add("dragging");
-    if (!isModalDrag) columnsEl.classList.add("dragging");
+    if (isModalDrag) {
+      modalWrap = win.closest('.modal-wrap');
+      if (modalWrap) modalWrap.style.pointerEvents = 'none';
+    } else {
+      columnsEl.classList.add("dragging");
+    }
 
     const rect = win.getBoundingClientRect();
     draggingWin.style.setProperty("--drag-w", `${rect.width}px`);
@@ -124,11 +130,16 @@ export function initWindowDnD() {
   const onUp = (e) => {
     if (!draggingWin) return;
 
+    const wrap = modalWrap;
     handleDrop(draggingWin, isModalDrag, columnsEl, cols, e, getDropColumnAt, dropMarker);
+    if (wrap && document.body.contains(wrap)) {
+      wrap.style.pointerEvents = '';
+    }
 
     document.removeEventListener("pointermove", onMove);
     draggingWin = null;
     isModalDrag = false;
+    modalWrap = null;
   };
 
   document.addEventListener("click", (e) => {
