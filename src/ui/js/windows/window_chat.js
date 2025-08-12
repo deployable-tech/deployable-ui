@@ -2,21 +2,39 @@ import { el } from "../ui.js";
 
 /**
  * Render a chat/LLM window.
- * @param {Object} cfg configuration
- * @param {string} winId window identifier
- * @returns {HTMLElement}
+ * - Toolbar buttons (optional)
+ * - Initial messages (optional)
+ * - Autosizing textarea
+ * - Enter to send (Shift+Enter for newline)
+ * - Async onSend handler
+ * - Simple message API: append/getMessages/clear
  */
-export function render(cfg = {}, winId) {
-  let messages = Array.isArray(cfg.messages) ? [...cfg.messages] : [];
-  const wrap = el("div", { class: "chat-window" });
+export function render(config = {}, winId) {
+  const cfg = { ...config };
+  const container = el("div", { class: "chat-window" });
 
+  // --- Toolbar (from codex) ---
   function makeToolbar(list) {
     if (!Array.isArray(list) || list.length === 0) return null;
     const bar = el("div", { class: "toolbar" });
     list.forEach((btn) => {
       const label = btn.icon || btn.label || "";
-      const b = el("button", { class: "icon-btn", title: btn.title || label }, [label]);
-      b.addEventListener("click", () => {
+      const b = el(
+        "button",
+        {
+          class:
+            btn.variant === "danger"
+              ? "btn btn-danger"
+              : btn.variant === "primary"
+              ? "btn btn-primary"
+              : "btn",
+          title: btn.title || label,
+          type: "button",
+        },
+        [label]
+      );
+      b.addEventListener("click", (ev) => {
+        ev.stopPropagation();
         if (btn.onClick) btn.onClick(ctx);
         else if (btn.id && cfg.onAction) cfg.onAction(btn.id, ctx);
       });
@@ -25,11 +43,48 @@ export function render(cfg = {}, winId) {
     return bar;
   }
 
-  const log = el("div", { class: "chat" });
-  const input = el("textarea", { class: "input", rows: 1, placeholder: cfg.placeholder || "" });
-  input.style.resize = "none";
-  const sendBtn = el("button", { class: "btn", type: "button" }, [cfg.sendLabel || "Send"]);
-  const composer = el("div", { class: "chat-input" }, [input, sendBtn]);
+  // --- Log (message area) ---
+  const log = el("div", { class: "chat-log" });
+
+  // --- Input / autosize (from main) ---
+  const textarea = el("textarea", {
+    class: "input",
+    rows: 1,
+    placeholder: cfg.placeholder || "",
+  });
+  textarea.style.resize = "none";
+
+  const sendBtn = el("button", { type: "submit", class: "btn" }, [
+    cfg.sendLabel || "Send",
+  ]);
+
+  const form = el("form", { class: "chat-input" }, [textarea, sendBtn]);
+
+  const maxHeight = cfg.maxInputHeight ?? Infinity;
+  const baseline = textarea.style.height || "auto";
+  const resize = () => {
+    // reset first so shrink works
+    textarea.style.height = baseline;
+    let h = textarea.scrollHeight;
+    if (maxHeight !== Infinity) h = Math.min(h, maxHeight);
+    textarea.style.height = `${h}px`;
+  };
+  textarea.addEventListener("input", resize);
+  setTimeout(resize, 0);
+
+  // --- Message helpers (from codex) ---
+  let messages = Array.isArray(cfg.messages) ? [...cfg.messages] : [];
+
+  function appendMessage(msg) {
+    const role = msg.role || "assistant";
+    const node = el("div", { class: `chat-msg is-${role}` });
+    const content = msg.content;
+    if (content instanceof HTMLElement) node.appendChild(content);
+    else node.append(String(content ?? ""));
+    if (msg.meta) node.appendChild(el("div", { class: "chat-meta" }, [msg.meta]));
+    log.appendChild(node);
+    if (cfg.autoScroll !== false) log.scrollTop = log.scrollHeight;
+  }
 
   const ctx = {
     winId,
@@ -38,63 +93,66 @@ export function render(cfg = {}, winId) {
     clear: () => {
       messages = [];
       log.innerHTML = "";
-    }
+    },
   };
 
-  function prune() {
-    if (cfg.maxMessages && messages.length > cfg.maxMessages) {
-      messages = messages.slice(-cfg.maxMessages);
-      while (log.children.length > messages.length) log.removeChild(log.firstChild);
-    }
-  }
-
-  function appendMessage(msg) {
-    const node = el("div", { class: `chat-msg is-${msg.role}` });
-    const content = msg.content;
-    if (content instanceof HTMLElement) node.appendChild(content); else node.append(content);
-    if (msg.meta) node.appendChild(el("div", { class: "chat-meta" }, [msg.meta]));
-    log.appendChild(node);
-    if (cfg.autoScroll !== false) log.scrollTop = log.scrollHeight;
-    prune();
-  }
-
-  messages.forEach(appendMessage);
-  if (messages.length === 0 && cfg.emptyText) {
+  // seed initial messages
+  if (messages.length) {
+    messages.forEach(appendMessage);
+  } else if (cfg.emptyText) {
     log.appendChild(el("div", { class: "chat-meta" }, [cfg.emptyText]));
   }
 
+  // --- Send handling (merge of both) ---
   let sending = false;
+
   async function doSend() {
     if (sending) return;
-    const text = input.value.trim();
+    const text = textarea.value.trim();
     if (!text) return;
+
     sending = true;
-    input.disabled = true;
+    textarea.disabled = true;
     sendBtn.disabled = true;
-    appendMessage({ role: "user", content: text });
-    input.value = "";
+
+    const userMsg = { role: "user", content: text };
+    messages.push(userMsg);
+    appendMessage(userMsg);
+    textarea.value = "";
+    resize();
+
     try {
       const res = await cfg.onSend?.(text, ctx);
-      if (res) appendMessage(res);
+      if (res) {
+        messages.push(res);
+        appendMessage(res);
+      }
     } finally {
-      input.disabled = false;
+      textarea.disabled = false;
       sendBtn.disabled = false;
       sending = false;
+      textarea.focus();
     }
   }
 
-  sendBtn.addEventListener("click", doSend);
-  input.addEventListener("keydown", (e) => {
+  // Enter to send, Shift+Enter for newline
+  textarea.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       doSend();
     }
   });
 
-  const tb = makeToolbar(cfg.toolbarTop);
-  if (tb) wrap.appendChild(tb);
-  wrap.appendChild(log);
-  wrap.appendChild(composer);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    doSend();
+  });
 
-  return wrap;
+  // --- Assemble ---
+  const topBar = makeToolbar(cfg.toolbarTop);
+  if (topBar) container.appendChild(topBar);
+  container.appendChild(log);
+  container.appendChild(form);
+
+  return container;
 }
