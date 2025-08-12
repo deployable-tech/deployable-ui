@@ -4,6 +4,11 @@ This repository provides a minimal JavaScript UI framework along with a Python
 based demo server. It is intended as a starting point for building and testing
 complex web applications without relying on Node.js.
 
+## Documentation
+
+Detailed documentation covering project structure, components, theming and
+extension points is available under [`docs/`](docs/README.md).
+
 ## Structure
 
 ```
