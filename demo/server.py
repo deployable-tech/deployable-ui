@@ -64,6 +64,11 @@ def health():
     }
 
 
+def healthz():
+    """Backwards compatible health endpoint."""
+    return {"status": "ok", "exists": True}
+
+
 if __name__ == "__main__":
     import uvicorn
 

@@ -259,7 +259,7 @@ html, body {
   height: 100%;
   min-height: 0;
 }
-.chat-window .chat-log {
+.chat {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -271,13 +271,41 @@ html, body {
   flex: 1 1 auto;
   min-height: 0;
 }
-.msg { padding: 8px 10px; border-radius: 10px; background: hsl(var(--h) var(--sat) var(--l-panel)); border: 1px solid var(--border); }
-.msg.you { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 3%)); }
-.msg.assistant { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 1%)); }
-.msg.context { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 2%)); font-size: 12px; color: var(--muted); }
+.chat-msg {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: hsl(var(--h) var(--sat) var(--l-panel));
+  border: 1px solid var(--border);
+}
+.chat-msg.is-user { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 3%)); align-self: flex-end; }
+.chat-msg.is-assistant { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 1%)); }
+.chat-msg.is-system { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 2%)); font-size: 12px; color: var(--muted); }
+.chat-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
 .chat-window .chat-input { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin-top: 8px; }
 .chat-window .chat-input .input { width: 100%; }
+
+/* ===== Text Editor ===== */
+.text-editor { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.text-editor .editor-row { display: flex; flex: 1 1 auto; min-height: 0; }
+.text-editor textarea { flex: 1 1 auto; width: 100%; }
+
+/* ===== List View ===== */
+.list-view { display: flex; flex-direction: column; gap: 4px; }
+.lv-row { display: flex; align-items: center; gap: 8px; padding: 6px; border: 1px solid var(--border); border-radius: 8px; }
+.lv-row.is-selected { background: var(--panel-sel); border-color: var(--accent); }
+.lv-avatar { flex: 0 0 auto; }
+.lv-main { flex: 1 1 auto; }
+.lv-title { font-weight: 600; }
+.lv-subtitle { font-size: 12px; color: var(--muted); }
+.lv-meta { margin-left: auto; font-size: 12px; color: var(--muted); }
+.lv-badges { display: flex; gap: 4px; }
+.lv-actions { display: flex; gap: 6px; }
+
+/* ===== Utilities ===== */
+.toolbar { display: flex; gap: 4px; }
+.toolbar.vertical { flex-direction: column; }
+.monospace { font-family: monospace; }
 
 /* ===== Search ===== */
 .search-bar { display: grid; grid-template-columns: 1fr 130px auto; gap: 8px; align-items: center; }

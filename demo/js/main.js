@@ -154,4 +154,60 @@ initMenu((action) => {
       ]
     });
   }
+  if (action === "spawn-editor") {
+    counter++;
+    spawnWindow({
+      id: `editor_${counter}`,
+      window_type: "window_text_editor",
+      title: `Editor ${counter}`,
+      col: "left",
+      dockable: true,
+      resizable: true,
+      content: "Type here...",
+      onSave: ({ id, content }) => console.log("save", id, content)
+    });
+  }
+  if (action === "spawn-listview") {
+    counter++;
+    spawnWindow({
+      id: `listview_${counter}`,
+      window_type: "window_generic",
+      title: `List View ${counter}`,
+      col: "right",
+      resizable: true,
+      Elements: [
+        {
+          type: "list_view",
+          id: `lv_${counter}`,
+          items: [
+            { id: 1, name: "Alpha", role: "admin" },
+            { id: 2, name: "Beta", role: "user" },
+            { id: 3, name: "Gamma", role: "guest" }
+          ],
+          keyField: "id",
+          template: {
+            title: (it) => it.name,
+            subtitle: (it) => it.role,
+            actions: [
+              { label: "Ping", onClick: (item) => console.log("ping", item.name) }
+            ]
+          },
+          selectable: true,
+          onSelectChange: (sel) => console.log("select", sel)
+        }
+      ]
+    });
+  }
+  if (action === "spawn-chat") {
+    counter++;
+    spawnWindow({
+      id: `chat_${counter}`,
+      window_type: "window_chat",
+      title: `Chat ${counter}`,
+      col: "left",
+      dockable: true,
+      resizable: true,
+      onSend: async (text) => ({ role: "assistant", content: `Echo: ${text}` })
+    });
+  }
 });

@@ -1,6 +1,8 @@
 // window.js — registry + modal/resize helpers
 import { el } from "./ui.js";
 import { render as renderGeneric } from "./windows/window_generic.js";
+import { render as renderTextEditor } from "./windows/window_text_editor.js";
+import { render as renderChat } from "./windows/window_chat.js";
 
 // Built‑in window type registry. Consumers can register additional types
 // via the exported ``registerWindowType`` function.
@@ -9,6 +11,10 @@ const WindowTypes = { window_generic: renderGeneric };
 export function registerWindowType(name, renderer) {
   WindowTypes[name] = renderer;
 }
+
+// Register built‑in extensions
+registerWindowType("window_text_editor", renderTextEditor);
+registerWindowType("window_chat", renderChat);
 
 export function createMiniWindowFromConfig(config) {
   const winId = (() => {
