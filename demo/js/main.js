@@ -1,7 +1,7 @@
-import { initWindowDnD } from "./dnd.js";
-import { initSplitter } from "./splitter.js";
-import { createMiniWindowFromConfig, initWindowResize, mountModal } from "./window.js";
-import { initMenu } from "./menu.js";
+import { initWindowDnD } from "/static/js/dnd.js";
+import { initSplitter } from "/static/js/splitter.js";
+import { createMiniWindowFromConfig, initWindowResize, mountModal } from "/static/js/window.js";
+import { initMenu } from "/static/js/menu.js";
 
 // Initialise basic UI helpers
 initSplitter();

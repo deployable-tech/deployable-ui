@@ -1,57 +1,71 @@
 """FastAPI demo server for the Deployable UI library.
 
-This server serves the contents of the ``demo/`` directory as the site root
-and exposes the ``src/ui`` folder under ``/static`` so that the demo can load
-the library's JavaScript and CSS assets.
+Serves:
+  /           -> demo/html/index.html
+  /js/*       -> files from demo/js
+  /static/*   -> library assets from src/ui (css/js)
+
+Keep demo-only code under demo/, library-only code under src/ui/.
 """
 
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-
+# Resolve paths
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEMO_DIR = REPO_ROOT / "demo"  # expects demo/index.html
-STATIC_DIR = REPO_ROOT / "src" / "ui"
-TITLE = "Deployable UI Demo"
+DEMO_DIR = REPO_ROOT / "demo"
+DEMO_HTML_DIR = DEMO_DIR / "html"
+DEMO_JS_DIR = DEMO_DIR / "js"
+DEMO_INDEX = DEMO_HTML_DIR / "index.html"
+SRC_UI_DIR = REPO_ROOT / "src" / "ui"
 
-app = FastAPI(title=TITLE)
+app = FastAPI(title="Deployable UI Demo")
 
-# Serve static assets from the framework
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+# Mount library assets at /static (CSS/JS used by the demo)
+app.mount("/static", StaticFiles(directory=SRC_UI_DIR), name="static")
 
-if (DEMO_DIR / "index.html").exists():
-    # Serve the demo folder as the site root
-    app.mount("/", StaticFiles(directory=str(DEMO_DIR), html=True), name="demo")
-else:
-    # Minimal fallback so tests still pass even without the demo/
-    @app.get("/", response_class=HTMLResponse)
-    def fallback_index():
-        return f"""<!doctype html>
-<html lang=\"en\"><head>
-  <meta charset=\"utf-8\" />
-  <title>{TITLE}</title>
-</head><body>
-  <h1>{TITLE}</h1>
-  <p>(Fallback page because <code>{DEMO_DIR}</code> was not found.)</p>
-</body></html>"""
+# Mount demo JS at /js
+app.mount("/js", StaticFiles(directory=DEMO_JS_DIR), name="demo_js")
 
 
-@app.get("/healthz")
-def healthz():
-    """Simple health-check endpoint used by tests."""
-    return {"status": "ok", "demo_dir": str(DEMO_DIR), "exists": DEMO_DIR.exists()}
+@app.get("/", response_class=HTMLResponse)
+def root():
+    if not DEMO_INDEX.exists():
+        return HTMLResponse(
+            f"<h1>Index not found</h1><p>Expected: {DEMO_INDEX}</p>", status_code=500
+        )
+    return HTMLResponse(DEMO_INDEX.read_text(encoding="utf-8"))
 
 
 @app.get("/demo")
 def to_root():
-    """Convenience redirect so /demo also serves the demo."""
+    # Convenience alias: /demo -> /
     return RedirectResponse(url="/")
+
+
+@app.get("/favicon.ico")
+def favicon():
+    # Silence browser 404 noise without shipping an icon
+    return Response(status_code=204)
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "demo_dir": str(DEMO_DIR),
+        "html_dir": str(DEMO_HTML_DIR),
+        "js_dir": str(DEMO_JS_DIR),
+        "index_exists": DEMO_INDEX.exists(),
+        "static_dir": str(SRC_UI_DIR),
+    }
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+    # Note: your Makefile uses :8001; this is for direct runs.
+    uvicorn.run(app, host="127.0.0.1", port=8001, reload=True)
