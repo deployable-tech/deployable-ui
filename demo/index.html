@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Deployable UI Demo</title>
+  <link rel="stylesheet" href="../src/ui/css/ui.css" />
+</head>
+<body>
+  <h1>Deployable UI Demo</h1>
+  <div id="app"></div>
+  <script src="../src/ui/js/ui.js"></script>
+  <script>
+    const app = document.getElementById('app');
+    const btn = UI.createButton('Open Modal', () => {
+      const modal = UI.createModal('<h2>Hello from Deployable UI</h2><p>This is a modal dialog.</p>');
+      document.body.appendChild(modal);
+    });
+    app.appendChild(btn);
+  </script>
+</body>
+</html>
