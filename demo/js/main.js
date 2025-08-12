@@ -2,6 +2,8 @@ import { initWindowDnD } from "/static/js/dnd.js";
 import { initSplitter } from "/static/js/splitter.js";
 import { createMiniWindowFromConfig, initWindowResize, mountModal } from "/static/js/window.js";
 import { initMenu } from "/static/js/menu.js";
+import { createUserMenu } from "/static/js/user_menu.js";
+import { getVar, setVar } from "/static/js/theme.js";
 
 // Initialise basic UI helpers
 initSplitter();
@@ -17,6 +19,68 @@ function spawnWindow(cfg) {
     col.appendChild(node);
   }
   return node;
+}
+
+const headerRight = document.querySelector(".app-header .right");
+const userMenu = createUserMenu({
+  name: "Demo User",
+  items: [
+    { id: "account", label: "Account Settings", onClick: () => console.log("account") },
+    { id: "appearance", label: "Appearance", onClick: () => spawnAppearanceWindow() },
+    { separator: true },
+    { id: "logout", label: "Logout", onClick: () => console.log("logout") }
+  ]
+});
+headerRight.appendChild(userMenu);
+
+function spawnAppearanceWindow() {
+  const win = spawnWindow({
+    id: `appearance_${counter++}`,
+    window_type: "window_generic",
+    title: "Appearance",
+    col: "right",
+    resizable: true,
+    dockable: true,
+    Elements: [
+      {
+        type: "number_field",
+        id: "theme_h",
+        name: "Hue",
+        min: 0,
+        max: 360,
+        value: parseInt(getVar("--h")) || 220
+      },
+      {
+        type: "number_field",
+        id: "theme_sat",
+        name: "Sat",
+        min: 0,
+        max: 100,
+        value: parseInt(getVar("--sat")) || 18
+      },
+      {
+        type: "number_field",
+        id: "theme_radius",
+        name: "Radius",
+        min: 0,
+        max: 40,
+        value: parseInt(getVar("--radius")) || 16
+      },
+      { type: "submit_button", text: "Apply" }
+    ]
+  });
+
+  const form = win.querySelector("form");
+  const apply = () => {
+    const h = form.querySelector("#theme_h").value;
+    const s = form.querySelector("#theme_sat").value;
+    const r = form.querySelector("#theme_radius").value;
+    setVar("--h", h);
+    setVar("--sat", `${s}%`);
+    setVar("--radius", `${r}px`);
+  };
+  form.addEventListener("change", apply);
+  form.addEventListener("submit", (e) => { e.preventDefault(); apply(); });
 }
 
 // Seed demo windows

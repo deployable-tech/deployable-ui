@@ -93,4 +93,19 @@ const uploader = Field.create({
 });
 ```
 
+### User Menu
+
+```js
+import { createUserMenu } from "/static/js/user_menu.js";
+
+const menu = createUserMenu({
+  name: "Demo User",
+  items: [
+    { label: "Account Settings", onClick: () => console.log("account") },
+    { label: "Logout", onClick: () => console.log("logout") }
+  ]
+});
+document.querySelector(".app-header .right").appendChild(menu);
+```
+
 To disable the backdrop when using modal windows, set `modalFade: false` in the window config.

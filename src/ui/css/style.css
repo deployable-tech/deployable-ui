@@ -54,6 +54,27 @@ html, body {
 .menu-item:hover { background: hsl(var(--h) var(--sat) var(--l-panel)); }
 .menu-sep { height: 1px; background: var(--border); margin: 6px 2px; }
 
+/* User menu */
+.user-menu .menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+}
+.user-menu .avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  overflow: hidden;
+}
+.user-menu img.avatar { object-fit: cover; }
+.user-menu .user-name { font-size: 12px; }
+
 /* ===== Columns & Splitter ===== */
 .columns { position: relative; display: flex; flex: 1 1 auto; min-height: 0; overflow: hidden; }
 .col { position: relative; flex: 1 1 50%; min-width: 200px; padding: 16px; overflow: auto; border-right: 1px solid var(--border); }
