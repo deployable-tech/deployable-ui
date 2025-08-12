@@ -20,12 +20,31 @@ export function createMiniWindowFromConfig(config) {
   })();
   const win = el("div", { class: "miniwin", tabindex: "0", "data-id": winId, id: winId });
 
+  const actions = el("div", { class: "actions" }, [
+    el("button", { class: "icon-btn js-min", title: "Minimize", "aria-label": "Minimize", "data-win": winId }, ["—"])
+  ]);
+  if (config.dockable) {
+    const dockLabel = config.modal ? "Dock" : "Undock";
+    const dockIcon = config.modal ? "⇲" : "⇱";
+    actions.appendChild(
+      el(
+        "button",
+        {
+          class: "icon-btn js-dock-toggle",
+          title: dockLabel,
+          "aria-label": dockLabel,
+          "data-win": winId
+        },
+        [dockIcon]
+      )
+    );
+  }
+  actions.appendChild(
+    el("button", { class: "icon-btn js-close", title: "Close", "aria-label": "Close", "data-win": winId }, ["✕"])
+  );
   const titlebar = el("div", { class: "titlebar" }, [
     el("div", { class: "title" }, [config.title || "Untitled"]),
-    el("div", { class: "actions" }, [
-      el("button", { class: "icon-btn js-min", title: "Minimize", "aria-label": "Minimize", "data-win": winId }, ["—"]),
-      el("button", { class: "icon-btn js-close", title: "Close", "aria-label": "Close", "data-win": winId }, ["✕"])
-    ])
+    actions
   ]);
 
   const contentInner = el("div", { class: "content-inner" });
@@ -60,6 +79,62 @@ export function mountModal(win) {
   wrap.append(backdrop, win);
   document.body.appendChild(wrap);
   return wrap;
+}
+
+export function undockWindow(win, rect) {
+  const r = rect || win.getBoundingClientRect();
+  mountModal(win);
+  win.classList.add("modal");
+  win.setAttribute("data-modal", "true");
+  Object.assign(win.style, {
+    position: "fixed",
+    left: `${r.left}px`,
+    top: `${r.top}px`,
+    width: `${r.width}px`
+  });
+}
+
+export function dockWindow(win) {
+  const cols = [...document.querySelectorAll(".col")];
+  if (cols.length === 0) return;
+
+  const rect = win.getBoundingClientRect();
+  const midX = rect.left + rect.width / 2;
+  const midY = rect.top + rect.height / 2;
+  let bestCol = cols[0];
+  let bestDist = Infinity;
+  for (const col of cols) {
+    const cRect = col.getBoundingClientRect();
+    const cMidX = cRect.left + cRect.width / 2;
+    const dist = Math.abs(midX - cMidX);
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestCol = col;
+    }
+  }
+
+  const wrap = win.closest(".modal-wrap");
+  if (wrap) wrap.remove();
+  win.classList.remove("modal");
+  win.removeAttribute("data-modal");
+  win.style.position = "";
+  win.style.left = "";
+  win.style.top = "";
+  win.style.width = "";
+
+  const siblings = [...bestCol.querySelectorAll(".miniwin")];
+  let inserted = false;
+  for (const sib of siblings) {
+    const sRect = sib.getBoundingClientRect();
+    const sMid = sRect.top + sRect.height / 2;
+    if (midY < sMid) {
+      bestCol.insertBefore(win, sib);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted) bestCol.appendChild(win);
+  win.focus({ preventScroll: true });
 }
 
 export function initWindowResize() {

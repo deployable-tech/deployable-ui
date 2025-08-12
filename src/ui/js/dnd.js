@@ -1,4 +1,5 @@
 // dnd.js — drag and drop between columns, minimize + close behavior
+import { dockWindow, undockWindow } from "./window.js";
 
 export function findDraggableWin(e) {
   const titlebar = e.target.closest(".titlebar");
@@ -137,6 +138,25 @@ export function initWindowDnD() {
         win.style.height = win.dataset.prevHeight;
         delete win.dataset.prevHeight;
       }
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".js-dock-toggle");
+    if (!btn) return;
+    const win = btn.closest(".miniwin");
+    if (!win) return;
+    if (win.classList.contains("modal")) {
+      dockWindow(win);
+      btn.textContent = "⇱";
+      btn.setAttribute("title", "Undock");
+      btn.setAttribute("aria-label", "Undock");
+    } else {
+      const rect = win.getBoundingClientRect();
+      undockWindow(win, rect);
+      btn.textContent = "⇲";
+      btn.setAttribute("title", "Dock");
+      btn.setAttribute("aria-label", "Dock");
     }
   });
 
