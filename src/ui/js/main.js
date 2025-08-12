@@ -91,4 +91,67 @@ initMenu((action) => {
       Elements: [{ type: "text", text: "This modal cannot dock." }]
     });
   }
+  if (action === "spawn-showcase") {
+    counter++;
+    const idx = counter;
+    spawnWindow({
+      id: `showcase_${idx}`,
+      window_type: "window_generic",
+      title: `UI Showcase ${idx}`,
+      col: "left",
+      resizable: true,
+      Elements: [
+        {
+          type: "item_list",
+          id: `list_basic_${idx}`,
+          label: "Items",
+          items: [
+            { label: "Item A" },
+            { label: "Item B" },
+            { label: "Item C" }
+          ],
+          item_template: { elements: [{ type: "text", bind: "label" }] }
+        },
+        { type: "text_field", name: "title", label: "Title", placeholder: "Enter title" },
+        { type: "text_area", name: "description", label: "Description" },
+        {
+          type: "select",
+          name: "choice",
+          label: "Choice",
+          options: [
+            { value: "one", label: "One" },
+            { value: "two", label: "Two" },
+            { value: "three", label: "Three" }
+          ]
+        },
+        {
+          type: "multi_select",
+          name: "tags",
+          label: "Tags",
+          options: [
+            { value: "red", label: "Red" },
+            { value: "green", label: "Green" },
+            { value: "blue", label: "Blue" }
+          ]
+        },
+        { type: "submit_button", text: "Save" },
+        {
+          type: "item_list",
+          id: `list_custom_${idx}`,
+          label: "Files",
+          items: [
+            { name: "Report.pdf" },
+            { name: "Chart.png" }
+          ],
+          item_template: {
+            elements: [
+              { type: "text", bind: "name" },
+              { type: "button", label: "Open", action: "open" },
+              { type: "button", label: "Remove", action: "remove", variant: "danger" }
+            ]
+          }
+        }
+      ]
+    });
+  }
 });
