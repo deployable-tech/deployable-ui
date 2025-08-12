@@ -17,9 +17,9 @@ install: venv requirements.txt
 	$(PIP) install -r requirements.txt
 
 dev: install
-        $(UVICORN) $(APP_MODULE) --host 127.0.0.1 --port 8001 --reload
+	$(UVICORN) $(APP_MODULE) --host 127.0.0.1 --port 8001 --reload
 
 test: install
-        $(PY) -m pytest
+	$(PY) -m pytest
 
 .PHONY: venv install dev test
