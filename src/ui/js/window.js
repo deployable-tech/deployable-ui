@@ -25,6 +25,7 @@ export function createMiniWindowFromConfig(config) {
     return id;
   })();
   const win = el("div", { class: "miniwin", tabindex: "0", "data-id": winId, id: winId });
+  if (config.modalFade === false) win.dataset.modalFade = "false";
 
   const actions = el("div", { class: "actions" }, [
     el("button", { class: "icon-btn js-min", title: "Minimize", "aria-label": "Minimize", "data-win": winId }, ["—"])
@@ -79,17 +80,23 @@ export function createMiniWindowFromConfig(config) {
   return win;
 }
 
-export function mountModal(win) {
+export function mountModal(win, opts = {}) {
+  const { fade = true } = opts;
   const wrap = el("div", { class: "modal-wrap" });
-  const backdrop = el("div", { class: "modal-backdrop" });
-  wrap.append(backdrop, win);
+  if (fade) {
+    const backdrop = el("div", { class: "modal-backdrop" });
+    wrap.append(backdrop, win);
+  } else {
+    wrap.appendChild(win);
+  }
   document.body.appendChild(wrap);
   return wrap;
 }
 
 export function undockWindow(win, rect) {
   const r = rect || win.getBoundingClientRect();
-  mountModal(win);
+  const fade = win.dataset.modalFade !== "false";
+  mountModal(win, { fade });
   win.classList.add("modal");
   win.setAttribute("data-modal", "true");
   Object.assign(win.style, {

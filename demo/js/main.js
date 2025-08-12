@@ -11,7 +11,7 @@ initWindowResize();
 function spawnWindow(cfg) {
   const node = createMiniWindowFromConfig(cfg);
   if (cfg.modal) {
-    mountModal(node);
+    mountModal(node, { fade: cfg.modalFade !== false });
   } else {
     const col = document.getElementById(cfg.col === "right" ? "col-right" : "col-left");
     col.appendChild(node);
@@ -88,6 +88,7 @@ initMenu((action) => {
       window_type: "window_generic",
       title: `Simple Modal ${counter}`,
       modal: true,
+      modalFade: false,
       Elements: [{ type: "text", text: "This modal cannot dock." }]
     });
   }
@@ -208,6 +209,25 @@ initMenu((action) => {
       dockable: true,
       resizable: true,
       onSend: async (text) => ({ role: "assistant", content: `Echo: ${text}` })
+    });
+  }
+  if (action === "spawn-upload") {
+    counter++;
+    spawnWindow({
+      id: `upload_${counter}`,
+      window_type: "window_generic",
+      title: `Upload ${counter}`,
+      col: "right",
+      resizable: true,
+      Elements: [
+        {
+          type: "file_upload",
+          id: `fu_${counter}`,
+          multiple: true,
+          buttonLabel: "Upload",
+          onUpload: (files) => console.log("upload", files)
+        }
+      ]
     });
   }
 });

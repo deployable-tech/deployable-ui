@@ -79,3 +79,18 @@ createMiniWindowFromConfig({
   onSend: async (text) => ({ role: "assistant", content: "Echo: " + text })
 });
 ```
+
+### File Upload Field
+
+```js
+import { Field } from "/static/js/ui.js";
+
+const uploader = Field.create({
+  type: "file_upload",
+  multiple: true,
+  buttonLabel: "Upload",
+  onUpload: (files) => console.log(files)
+});
+```
+
+To disable the backdrop when using modal windows, set `modalFade: false` in the window config.

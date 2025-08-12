@@ -238,6 +238,7 @@ html, body {
 .result-meta span:last-child { justify-self: end; }
 .li-actions { display: flex; gap: 8px; }
 
+.file-upload { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 .upload-list {
   list-style: none;
   padding-left: 0;

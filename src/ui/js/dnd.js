@@ -38,18 +38,9 @@ export function handleDrop(draggingWin, isModalDrag, columnsEl, cols, e, getDrop
       draggingWin.focus({ preventScroll: true });
     }
   } else {
+    // When dragging a modal window, just finish the drag without docking.
     draggingWin.classList.remove("dragging");
     draggingWin.style.removeProperty("--drag-w");
-    const targetCol = getDropColumnAt(e.clientX, e.clientY);
-    if (targetCol) {
-      dockWindow(draggingWin, targetCol);
-      const btn = draggingWin.querySelector(".js-dock-toggle");
-      if (btn) {
-        btn.textContent = "⇱";
-        btn.setAttribute("title", "Undock");
-        btn.setAttribute("aria-label", "Undock");
-      }
-    }
   }
 }
 
