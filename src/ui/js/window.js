@@ -94,22 +94,24 @@ export function undockWindow(win, rect) {
   });
 }
 
-export function dockWindow(win) {
+export function dockWindow(win, targetCol) {
   const cols = [...document.querySelectorAll(".col")];
   if (cols.length === 0) return;
 
   const rect = win.getBoundingClientRect();
-  const midX = rect.left + rect.width / 2;
   const midY = rect.top + rect.height / 2;
-  let bestCol = cols[0];
-  let bestDist = Infinity;
-  for (const col of cols) {
-    const cRect = col.getBoundingClientRect();
-    const cMidX = cRect.left + cRect.width / 2;
-    const dist = Math.abs(midX - cMidX);
-    if (dist < bestDist) {
-      bestDist = dist;
-      bestCol = col;
+  let bestCol = targetCol || cols[0];
+  if (!targetCol) {
+    const midX = rect.left + rect.width / 2;
+    let bestDist = Infinity;
+    for (const col of cols) {
+      const cRect = col.getBoundingClientRect();
+      const cMidX = cRect.left + cRect.width / 2;
+      const dist = Math.abs(midX - cMidX);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestCol = col;
+      }
     }
   }
 

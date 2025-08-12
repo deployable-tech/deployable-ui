@@ -46,14 +46,27 @@ export const Field = {
       }
       return sel;
     },
+    "multi_select": ({ id, name, options = [], value = [] }) => {
+      const sel = el("select", { id, name: name || id, class: "input", multiple: "multiple" });
+      const vals = Array.isArray(value) ? value : [];
+      for (const opt of options) {
+        const o = el("option", { value: opt.value }, [opt.label || opt.value]);
+        if (vals.includes(opt.value)) o.selected = true;
+        sel.appendChild(o);
+      }
+      return sel;
+    },
+    "submit_button": ({ id, text = "Submit" }) => {
+      return el("button", { id, type: "submit", class: "btn" }, [text]);
+    },
     "text": ({ text = "", className = "" }) => {
       const s = el("span", {}, [String(text)]);
       if (className) s.className = className;
       return s;
     },
   },
-  create(cfg) {
-    const r = this.renderers[cfg.type];
+  create: (cfg) => {
+    const r = Field.renderers[cfg.type];
     if (!r) throw new Error(`Unknown field type: ${cfg.type}`);
     return r(cfg);
   }

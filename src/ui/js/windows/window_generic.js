@@ -21,5 +21,6 @@ export function render(config, winId) {
     const input = Field.create({ ...e, id });
     form.appendChild(fieldRow(id, label, input));
   });
+  form.addEventListener("submit", (e) => e.preventDefault());
   return form;
 }
