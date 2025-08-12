@@ -1,26 +1,14 @@
 // window.js — registry + modal/resize helpers
 import { el } from "./ui.js";
 import { render as renderGeneric } from "./windows/window_generic.js";
-import { render as renderDocuments } from "./windows/window_documents.js";
-import { render as renderSessions } from "./windows/window_sessions.js";
-import { render as renderChatUI } from "./windows/window_chat_ui.js";
-import { render as renderSearch } from "./windows/window_search.js";
-import { render as renderSegments } from "./windows/window_segments.js";
-import { render as renderPersona } from "./windows/window_persona.js";
-import { render as renderSegmentView } from "./windows/window_segment_view.js";
-import { render as renderPromptEditor } from "./windows/window_prompt_editor.js";
 
-const WindowTypes = {
-  window_generic: renderGeneric,
-  window_documents: renderDocuments,
-  window_sessions: renderSessions,
-  window_chat_ui: renderChatUI,
-  window_search: renderSearch,
-  window_segments: renderSegments,
-  window_persona: renderPersona,
-  window_segment_view: renderSegmentView,
-  window_prompt_editor: renderPromptEditor,
-};
+// Built‑in window type registry. Consumers can register additional types
+// via the exported ``registerWindowType`` function.
+const WindowTypes = { window_generic: renderGeneric };
+
+export function registerWindowType(name, renderer) {
+  WindowTypes[name] = renderer;
+}
 
 export function createMiniWindowFromConfig(config) {
   const winId = (() => {
@@ -43,8 +31,9 @@ export function createMiniWindowFromConfig(config) {
   const contentInner = el("div", { class: "content-inner" });
   const content = el("div", { class: "content" }, [contentInner]);
 
-  const renderer = WindowTypes[config.window_type || "window_generic"];
-  if (!renderer) throw new Error(`Unknown window_type: ${config.window_type}`);
+  const type = config.window_type || "window_generic";
+  const renderer = WindowTypes[type];
+  if (!renderer) throw new Error(`Unknown window_type: ${type}`);
   const body = renderer(config, winId);
   contentInner.appendChild(body);
 
@@ -55,15 +44,7 @@ export function createMiniWindowFromConfig(config) {
 
   win.append(titlebar, content);
 
-  const RESIZABLE = new Set([
-    "window_chat_ui",
-    "window_documents",
-    "window_segments",
-    "window_search",
-    "window_segment_view",
-    "window_prompt_editor",
-  ]);
-  if (RESIZABLE.has(config.window_type)) {
+  if (config.resizable) {
     const handle = el("div", { class: "win-resizer-y", "aria-label": "Resize window height" });
     win.appendChild(handle);
     const saved = localStorage.getItem(`win:${winId}:h`);

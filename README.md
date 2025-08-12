@@ -12,6 +12,7 @@ src/ui/
   css/ - framework styles
 
 demo/      - example application using the framework
+tests/     - lightweight pytest suite for the demo server
 codex_startup.py - helper script to run tests and launch the demo
 ```
 

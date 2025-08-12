@@ -4,7 +4,7 @@ PYTHON    ?= python3
 PIP       := $(VENV_NAME)/bin/pip
 PY        := $(VENV_NAME)/bin/python
 UVICORN   := $(VENV_NAME)/bin/uvicorn
-APP_MODULE = tests.test_server:app
+APP_MODULE = demo.server:app
 
 # Build the venv only if it doesn't exist
 $(VENV_NAME)/bin/activate:
@@ -17,8 +17,9 @@ install: venv requirements.txt
 	$(PIP) install -r requirements.txt
 
 dev: install
-	$(UVICORN) $(APP_MODULE) --host 127.0.0.1 --port 8001 --reload
+        $(UVICORN) $(APP_MODULE) --host 127.0.0.1 --port 8001 --reload
 
-test: dev
+test: install
+        $(PY) -m pytest
 
 .PHONY: venv install dev test
