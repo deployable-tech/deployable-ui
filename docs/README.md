@@ -9,24 +9,9 @@ This document provides an overview of the library's structure, available compone
 ```
 src/ui/      - JavaScript and CSS assets for the UI toolkit
 demo/        - Example application served by a FastAPI demo server
-codex_startup.py - Helper script that runs tests and launches the demo server
+test/        - Simple code testing (not really critical)
 ```
 
-### Installation
-
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Run the test suite:
-   ```bash
-   pytest
-   ```
-3. Start the demo server:
-   ```bash
-   python demo/server.py
-   ```
-   Visit <http://127.0.0.1:8000/> to see the example application.
 
 ## Core Utilities
 
