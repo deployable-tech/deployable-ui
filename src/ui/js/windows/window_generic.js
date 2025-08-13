@@ -7,19 +7,14 @@ export function render(config, winId) {
     const baseId = e.id || (e.name ? e.name.toLowerCase().replace(/\s+/g, "_") : `field_${idx+1}`);
     const id = `${baseId}`;
     const label = e.label || e.name || baseId;
-    const opts = {
-      showLabel: e.showLabel !== false,
-      labelPosition: e.labelPosition || "left",
-    };
-
     if (e.type === "item_list") {
       const listEl = createItemList(config.id || winId, { ...e, id });
-      form.appendChild(fieldRow(id, label, listEl, opts));
+      form.appendChild(fieldRow(id, label, listEl, e));
       return;
     }
 
     const input = Field.create({ ...e, id });
-    form.appendChild(fieldRow(id, label, input, opts));
+    form.appendChild(fieldRow(id, label, input, e));
   });
   form.addEventListener("submit", (e) => e.preventDefault());
   return form;

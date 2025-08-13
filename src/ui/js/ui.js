@@ -1,6 +1,20 @@
 // ui.js — element factory + basic field registry (inputs + views)
 import { renderListView } from "./fields/list_view.js";
 import { renderFileUpload } from "./fields/file_upload.js";
+
+// normalize config key and apply row class for label position
+export function normalizeLabelPos(cfg) {
+  // prefer snake_case, then camelCase, then default
+  return (cfg && (cfg.label_position ?? cfg.labelPosition)) || "left";
+}
+
+export function applyLabelPosition(rowEl, pos) {
+  const p = (pos || "left").toLowerCase();
+  rowEl.classList.remove("label-top", "label-left", "label-right", "label-none");
+  // treat invalid values as "left"
+  const cls = ["top", "left", "right", "none"].includes(p) ? p : "left";
+  rowEl.classList.add(`label-${cls}`);
+}
 export function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -16,30 +30,14 @@ export function el(tag, attrs = {}, children = []) {
   return node;
 }
 
-export function fieldRow(id, labelText, inputEl, opts = {}) {
-  const { showLabel = true, labelPosition = "left" } = opts;
-  const classes = ["row", `label-${labelPosition}`];
-  if (!showLabel) classes.push("no-label");
-  const labelEl = showLabel ? el("label", { for: id }, [labelText]) : null;
-  const row = el("div", { class: classes.join(" ") }, []);
-  switch (labelPosition) {
-    case "right":
-      row.appendChild(inputEl);
-      if (labelEl) row.appendChild(labelEl);
-      break;
-    case "top":
-      if (labelEl) row.appendChild(labelEl);
-      row.appendChild(inputEl);
-      break;
-    case "bottom":
-      row.appendChild(inputEl);
-      if (labelEl) row.appendChild(labelEl);
-      break;
-    case "left":
-    default:
-      if (labelEl) row.appendChild(labelEl);
-      row.appendChild(inputEl);
-  }
+export function fieldRow(id, labelText, inputEl, cfg = {}) {
+  const row = el("div", { class: "row" });
+  const labelEl = el("label", { for: id, class: "label" }, [labelText]);
+  const valueEl = el("div", { class: "value" }, inputEl ? [inputEl] : []);
+  row.append(labelEl, valueEl);
+  let pos = normalizeLabelPos(cfg);
+  if (cfg.showLabel === false && pos !== "none") pos = "none";
+  applyLabelPosition(row, pos);
   return row;
 }
 

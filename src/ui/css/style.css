@@ -377,3 +377,41 @@ html, body {
 .modal-wrap { position: fixed; inset: 0; display: grid; place-items: center; z-index: 1000; }
 .modal-backdrop { position: absolute; inset: 0; background: var(--backdrop); backdrop-filter: blur(2px); }
 .miniwin.modal { position: fixed; top: 15vh; left: calc(50% - 260px); width: 520px; margin: 0; z-index: 1001; }
+
+/* Generic label positioning for framework rows */
+.row.label-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.row.label-top > .label {
+  margin: 0 0 0.5rem 0;
+  width: auto;
+}
+
+.row.label-top > .value {
+  width: 100%;
+}
+
+.row.label-left {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: start;
+  column-gap: 0.75rem;
+}
+
+.row.label-right {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: start;
+  column-gap: 0.75rem;
+}
+
+.row.label-none > .label {
+  display: none;
+}
+
+.row.label-none > .value {
+  grid-column: 1 / -1;
+  width: 100%;
+}
