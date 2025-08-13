@@ -23,6 +23,22 @@ The `el` function is a tiny helper that creates DOM nodes. It accepts a tag name
 
 Each field renderer receives a configuration object and must return an `HTMLElement`. When used inside a window, fields can be declared through the `Elements` array of the window configuration.
 
+### Field Layout and Labels
+`fieldRow` wraps an input element with an optional label. Labels can appear on the left, right, top or bottom by setting `labelPosition`.
+The field value container uses flexbox so controls and any trailing buttons align neatly. By default the main element grows to fill
+available space (`flex: 1 1 auto; min-width: 0`). Set `grow: false` in a field configuration to keep a fixed width.
+
+Example field configuration:
+
+```javascript
+{
+  type: "text_field",
+  label: "Name",
+  labelPosition: "top",
+  grow: false
+}
+```
+
 ## Window System
 
 `createMiniWindowFromConfig` builds movable mini windows. Windows can be modal, docked inside columns, resizable, and include action buttons. New window types are registered with `registerWindowType` and provide a renderer that receives the configuration and window id.

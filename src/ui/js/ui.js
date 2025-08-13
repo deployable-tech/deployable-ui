@@ -17,28 +17,43 @@ export function el(tag, attrs = {}, children = []) {
 }
 
 export function fieldRow(id, labelText, inputEl, opts = {}) {
-  const { showLabel = true, labelPosition = "left" } = opts;
+  const { showLabel = true, labelPosition = "left", grow = true } = opts;
   const classes = ["row", `label-${labelPosition}`];
   if (!showLabel) classes.push("no-label");
   const labelEl = showLabel ? el("label", { for: id }, [labelText]) : null;
+  const valueEl = el(
+    "div",
+    {
+      class: "value",
+      style: { display: "flex", alignItems: "center", gap: "8px" }
+    },
+    [inputEl]
+  );
+  if (grow === false) {
+    inputEl.style.flex = "0 0 auto";
+    inputEl.style.minWidth = "initial";
+  } else {
+    inputEl.style.flex = "1 1 auto";
+    inputEl.style.minWidth = 0;
+  }
   const row = el("div", { class: classes.join(" ") }, []);
   switch (labelPosition) {
     case "right":
-      row.appendChild(inputEl);
+      row.appendChild(valueEl);
       if (labelEl) row.appendChild(labelEl);
       break;
     case "top":
       if (labelEl) row.appendChild(labelEl);
-      row.appendChild(inputEl);
+      row.appendChild(valueEl);
       break;
     case "bottom":
-      row.appendChild(inputEl);
+      row.appendChild(valueEl);
       if (labelEl) row.appendChild(labelEl);
       break;
     case "left":
     default:
       if (labelEl) row.appendChild(labelEl);
-      row.appendChild(inputEl);
+      row.appendChild(valueEl);
   }
   return row;
 }

@@ -10,6 +10,7 @@ export function render(config, winId) {
     const opts = {
       showLabel: e.showLabel !== false,
       labelPosition: e.labelPosition || "left",
+      grow: e.grow,
     };
 
     if (e.type === "item_list") {
