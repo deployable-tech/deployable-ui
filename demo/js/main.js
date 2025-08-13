@@ -93,6 +93,22 @@ spawnWindow({
   ]
 });
 
+// Demonstrate label positioning options
+spawnWindow({
+  id: "label_positions",
+  window_type: "window_generic",
+  title: "Label Positions",
+  col: "left",
+  resizable: true,
+  Elements: [
+    { type: "text_field", id: "lbl_left", label: "Left", labelPosition: "left" },
+    { type: "text_field", id: "lbl_right", label: "Right", labelPosition: "right" },
+    { type: "text_field", id: "lbl_top", label: "Top", labelPosition: "top" },
+    { type: "text_field", id: "lbl_bottom", label: "Bottom", labelPosition: "bottom" },
+    { type: "text_field", id: "lbl_none", label: "Hidden", showLabel: false, placeholder: "No label" }
+  ]
+});
+
 // Simple menu actions to spawn additional windows
 let counter = 0;
 initMenu((action) => {
