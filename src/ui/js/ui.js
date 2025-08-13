@@ -16,11 +16,31 @@ export function el(tag, attrs = {}, children = []) {
   return node;
 }
 
-export function fieldRow(id, labelText, inputEl) {
-  return el("div", { class: "row" }, [
-    el("label", { for: id }, [labelText]),
-    inputEl
-  ]);
+export function fieldRow(id, labelText, inputEl, opts = {}) {
+  const { showLabel = true, labelPosition = "left" } = opts;
+  const classes = ["row", `label-${labelPosition}`];
+  if (!showLabel) classes.push("no-label");
+  const labelEl = showLabel ? el("label", { for: id }, [labelText]) : null;
+  const row = el("div", { class: classes.join(" ") }, []);
+  switch (labelPosition) {
+    case "right":
+      row.appendChild(inputEl);
+      if (labelEl) row.appendChild(labelEl);
+      break;
+    case "top":
+      if (labelEl) row.appendChild(labelEl);
+      row.appendChild(inputEl);
+      break;
+    case "bottom":
+      row.appendChild(inputEl);
+      if (labelEl) row.appendChild(labelEl);
+      break;
+    case "left":
+    default:
+      if (labelEl) row.appendChild(labelEl);
+      row.appendChild(inputEl);
+  }
+  return row;
 }
 
 export const Field = {

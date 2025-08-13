@@ -1,25 +1,10 @@
-import { initWindowDnD } from "/static/js/dnd.js";
-import { initSplitter } from "/static/js/splitter.js";
-import { createMiniWindowFromConfig, initWindowResize, mountModal } from "/static/js/window.js";
 import { initMenu } from "/static/js/menu.js";
 import { createUserMenu } from "/static/js/user_menu.js";
 import { getVar, setVar } from "/static/js/theme.js";
+import { initFramework, spawnWindow } from "./framework.js";
 
 // Initialise basic UI helpers
-initSplitter();
-initWindowDnD();
-initWindowResize();
-
-function spawnWindow(cfg) {
-  const node = createMiniWindowFromConfig(cfg);
-  if (cfg.modal) {
-    mountModal(node, { fade: cfg.modalFade !== false });
-  } else {
-    const col = document.getElementById(cfg.col === "right" ? "col-right" : "col-left");
-    col.appendChild(node);
-  }
-  return node;
-}
+initFramework();
 
 const headerRight = document.querySelector(".app-header .right");
 const userMenu = createUserMenu({
