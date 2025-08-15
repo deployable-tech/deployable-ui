@@ -315,7 +315,7 @@ html, body {
   min-height: 0;
   width: 100%;
 }
-.chat {
+.chat-log {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -323,7 +323,7 @@ html, body {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: hsl(var(--h) var(--sat) calc(var(--l-bg) + 2%));
-  overflow: auto;
+  overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -338,8 +338,16 @@ html, body {
 .chat-msg.is-system { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 2%)); font-size: 12px; color: var(--muted); }
 .chat-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-.chat-window .chat-input { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin-top: 8px; }
-.chat-window .chat-input .input { width: 100%; }
+.chat-window .chat-input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  width: 100%;
+  flex: 0 0 auto;
+}
+.chat-window .chat-input .input { width: 100%; min-width: 0; }
 
 /* ===== Text Editor ===== */
 .text-editor { display: flex; flex-direction: column; height: 100%; min-height: 0; width: 100%; }
