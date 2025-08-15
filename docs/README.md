@@ -19,7 +19,7 @@ test/        - Simple code testing (not really critical)
 The `el` function is a tiny helper that creates DOM nodes. It accepts a tag name, an attributes object, and an array of children. Event handlers are attached by prefixing attribute names with `on`.
 
 ### Field Registry
-`Field.create` produces form fields and view widgets from a declarative configuration. Built‑in renderers include text inputs, number inputs, select menus, text areas, list views and file uploads. Custom renderers can be registered by adding functions to `Field.renderers`.
+`Field.create` produces form fields and view widgets from a declarative configuration. Built‑in renderers include text inputs, number inputs, select menus, text areas, list views, file uploads and color pickers. Custom renderers can be registered by adding functions to `Field.renderers`.
 
 Each field renderer receives a configuration object and must return an `HTMLElement`. When used inside a window, fields can be declared through the `Elements` array of the window configuration.
 
@@ -77,7 +77,19 @@ Selected files are kept in memory until cleared. The returned element exposes `g
 
 CSS lives under `src/ui/css`. Theme variables can be read and written with `getVar` and `setVar` from `theme.js`. Calling `applyThemeSettings` with an object, JSON string, or nothing will apply stored settings from `localStorage`.
 
-Applications can define their own themes by writing CSS variables such as `--accent`, `--bg`, or `--text`. Persist user choices by saving a JSON object to `localStorage` under the `theme` key and invoking `applyThemeSettings()` on startup.
+Common variables include:
+
+- `--font-family` – base font stack for the application.
+- `--font-size-base` – root font size.
+- `--win-gap-vertical` / `--win-gap-horizontal` – spacing between docked windows and column edges.
+- `--win-radius` – border radius applied to window panels.
+- Palette values like `--base-color`, `--positive-accent`, `--neutral-accent` or `--negative-accent` for color customization.
+
+The helper `generatePalette` in `theme.js` can derive matching accent colors from a base hue.
+
+Applications can define their own themes by writing these CSS variables. Persist user choices by saving a JSON object to `localStorage` under the `theme` key and invoking `applyThemeSettings()` on startup.
+
+The demo includes a "Theme Editor" window reachable from the main menu. It surfaces adjustable values such as font settings, window spacing and radius, and provides color pickers for the base hue and accent colors. Changes are applied live and saved to `localStorage`.
 
 ## Extending the Library
 

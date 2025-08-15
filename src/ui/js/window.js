@@ -3,6 +3,7 @@ import { el } from "./ui.js";
 import { render as renderGeneric } from "./windows/window_generic.js";
 import { render as renderTextEditor } from "./windows/window_text_editor.js";
 import { render as renderChat } from "./windows/window_chat.js";
+import { render as renderThemeEditor } from "./windows/window_theme_editor.js";
 
 // Built‑in window type registry. Consumers can register additional types
 // via the exported ``registerWindowType`` function.
@@ -15,6 +16,7 @@ export function registerWindowType(name, renderer) {
 // Register built‑in extensions
 registerWindowType("window_text_editor", renderTextEditor);
 registerWindowType("window_chat", renderChat);
+registerWindowType("window_theme_editor", renderThemeEditor);
 
 export function createMiniWindowFromConfig(config) {
   const winId = (() => {
@@ -60,6 +62,7 @@ export function createMiniWindowFromConfig(config) {
   const type = config.window_type || "window_generic";
   const renderer = WindowTypes[type];
   if (!renderer) throw new Error(`Unknown window_type: ${type}`);
+  if (type === "window_chat") contentInner.classList.add("is-chat");
   const body = renderer(config, winId);
   contentInner.appendChild(body);
 
