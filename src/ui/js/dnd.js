@@ -15,7 +15,75 @@ export function calcDragPosition(winStart, pointerStart, e) {
   };
 }
 
-export function handleDrop(draggingWin, isModalDrag, columnsEl, cols, e, getDropColumnAt, dropMarker) {
+const dragState = {
+  draggingWin: null,
+  isModalDrag: false,
+  modalWrap: null,
+  winStart: { x: 0, y: 0 },
+  pointerStart: { x: 0, y: 0 },
+};
+
+let columnsEl = null;
+let cols = [];
+let dropMarker = null;
+let getDropColumnAt = null;
+
+export function handleDragStart(e) {
+  const win = findDraggableWin(e);
+  if (!win) return;
+
+  dragState.draggingWin = win;
+  dragState.isModalDrag = win.classList.contains("modal");
+  win.classList.add("dragging");
+  if (dragState.isModalDrag) {
+    dragState.modalWrap = win.closest('.modal-wrap');
+    if (dragState.modalWrap) dragState.modalWrap.style.pointerEvents = 'none';
+  } else {
+    columnsEl.classList.add("dragging");
+  }
+
+  const rect = win.getBoundingClientRect();
+  win.style.setProperty("--drag-w", `${rect.width}px`);
+  dragState.winStart = { x: rect.left, y: rect.top };
+  dragState.pointerStart = { x: e.clientX, y: e.clientY };
+
+  if (!dragState.isModalDrag) {
+    Object.assign(win.style, { left: `${rect.left}px`, top: `${rect.top}px` });
+  }
+}
+
+export function handleDragMove(e) {
+  const { draggingWin, isModalDrag } = dragState;
+  if (!draggingWin) return;
+  const pos = calcDragPosition(dragState.winStart, dragState.pointerStart, e);
+  draggingWin.style.left = `${pos.left}px`;
+  draggingWin.style.top = `${pos.top}px`;
+
+  if (!isModalDrag) {
+    cols.forEach(c => c.classList.remove("drop-candidate"));
+    const over = getDropColumnAt(e.clientX, e.clientY);
+    if (over) {
+      over.classList.add("drop-candidate");
+      const siblings = [...over.querySelectorAll('.miniwin')].filter(w => w !== draggingWin);
+      let inserted = false;
+      for (const sib of siblings) {
+        const rect = sib.getBoundingClientRect();
+        if (e.clientY < rect.top + rect.height / 2) {
+          over.insertBefore(dropMarker, sib);
+          inserted = true;
+          break;
+        }
+      }
+      if (!inserted) over.appendChild(dropMarker);
+    } else if (dropMarker.parentNode) {
+      dropMarker.parentNode.removeChild(dropMarker);
+    }
+  }
+}
+
+export function handleDrop(e) {
+  const { draggingWin, isModalDrag, modalWrap } = dragState;
+  if (!draggingWin) return;
   if (!isModalDrag) {
     const targetCol = dropMarker.parentNode || getDropColumnAt(e.clientX, e.clientY);
     cols.forEach(c => c.classList.remove("drop-candidate"));
@@ -42,96 +110,32 @@ export function handleDrop(draggingWin, isModalDrag, columnsEl, cols, e, getDrop
     draggingWin.classList.remove("dragging");
     draggingWin.style.removeProperty("--drag-w");
   }
+
+  if (modalWrap && document.body.contains(modalWrap)) {
+    modalWrap.style.pointerEvents = '';
+  }
+
+  dragState.draggingWin = null;
+  dragState.isModalDrag = false;
+  dragState.modalWrap = null;
 }
 
 export function initWindowDnD() {
-  const columnsEl = document.getElementById("columns");
-  const cols = [...document.querySelectorAll(".col")];
+  columnsEl = document.getElementById("columns");
+  cols = [...document.querySelectorAll(".col")];
 
-  const dropMarker = document.createElement("div");
+  dropMarker = document.createElement("div");
   dropMarker.className = "drop-marker";
 
-  let draggingWin = null;
-  let isModalDrag = false;
-  let modalWrap = null;
-  let winStart = { x: 0, y: 0 };
-  let pointerStart = { x: 0, y: 0 };
-
-  const getDropColumnAt = (x, y) => {
+  getDropColumnAt = (x, y) => {
     const els = document.elementsFromPoint(x, y);
     const hit = els.find(el => el.classList && el.classList.contains("col"));
     return hit || null;
   };
 
-  const onTitlebarDown = (e) => {
-    const win = findDraggableWin(e);
-    if (!win) return;
-
-    draggingWin = win;
-    isModalDrag = win.classList.contains("modal");
-    draggingWin.classList.add("dragging");
-    if (isModalDrag) {
-      modalWrap = win.closest('.modal-wrap');
-      if (modalWrap) modalWrap.style.pointerEvents = 'none';
-    } else {
-      columnsEl.classList.add("dragging");
-    }
-
-    const rect = win.getBoundingClientRect();
-    draggingWin.style.setProperty("--drag-w", `${rect.width}px`);
-    winStart = { x: rect.left, y: rect.top };
-    pointerStart = { x: e.clientX, y: e.clientY };
-
-    if (!isModalDrag) {
-      Object.assign(draggingWin.style, { left: `${rect.left}px`, top: `${rect.top}px` });
-    }
-
-    document.addEventListener("pointermove", onMove);
-    document.addEventListener("pointerup", onUp, { once: true });
-  };
-
-  const onMove = (e) => {
-    if (!draggingWin) return;
-    const pos = calcDragPosition(winStart, pointerStart, e);
-    draggingWin.style.left = `${pos.left}px`;
-    draggingWin.style.top = `${pos.top}px`;
-
-    if (!isModalDrag) {
-      cols.forEach(c => c.classList.remove("drop-candidate"));
-      const over = getDropColumnAt(e.clientX, e.clientY);
-      if (over) {
-        over.classList.add("drop-candidate");
-        const siblings = [...over.querySelectorAll('.miniwin')].filter(w => w !== draggingWin);
-        let inserted = false;
-        for (const sib of siblings) {
-          const rect = sib.getBoundingClientRect();
-          if (e.clientY < rect.top + rect.height / 2) {
-            over.insertBefore(dropMarker, sib);
-            inserted = true;
-            break;
-          }
-        }
-        if (!inserted) over.appendChild(dropMarker);
-      } else if (dropMarker.parentNode) {
-        dropMarker.parentNode.removeChild(dropMarker);
-      }
-    }
-  };
-
-  const onUp = (e) => {
-    if (!draggingWin) return;
-
-    const wrap = modalWrap;
-    handleDrop(draggingWin, isModalDrag, columnsEl, cols, e, getDropColumnAt, dropMarker);
-    if (wrap && document.body.contains(wrap)) {
-      wrap.style.pointerEvents = '';
-    }
-
-    document.removeEventListener("pointermove", onMove);
-    draggingWin = null;
-    isModalDrag = false;
-    modalWrap = null;
-  };
+  document.addEventListener("pointerdown", handleDragStart, { passive: true });
+  document.addEventListener("pointermove", handleDragMove);
+  document.addEventListener("pointerup", handleDrop);
 
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".js-min");
@@ -184,6 +188,4 @@ export function initWindowDnD() {
       win.remove();
     }
   });
-
-  document.addEventListener("pointerdown", onTitlebarDown, { passive: true });
 }
