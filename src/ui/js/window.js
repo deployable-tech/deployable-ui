@@ -6,6 +6,8 @@ import { render as renderTextEditor } from "./windows/window_text_editor.js";
 import { render as renderChat } from "./windows/window_chat.js";
 import { render as renderThemeEditor } from "./windows/window_theme_editor.js";
 
+//HELO!!!
+
 // Built‑in window type registry. Consumers can register additional types
 // via the exported ``registerWindowType`` function.
 const WindowTypes = { window_generic: renderGeneric };
