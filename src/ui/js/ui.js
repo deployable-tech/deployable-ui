@@ -18,7 +18,8 @@ export function el(tag, attrs = {}, children = []) {
 }
 
 export function fieldRow(id, labelText, inputEl, opts = {}) {
-  const { showLabel = true, labelPosition = "left" } = opts;
+  const showLabel = opts.showLabel !== false;
+  const labelPosition = opts.labelPosition || opts.label_position || "left";
   const classes = ["row", `label-${labelPosition}`];
   if (!showLabel) classes.push("no-label");
   const labelEl = showLabel ? el("label", { for: id }, [labelText]) : null;
