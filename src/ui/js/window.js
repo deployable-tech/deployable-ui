@@ -1,5 +1,6 @@
 // window.js — registry + modal/resize helpers
 import { el } from "./ui.js";
+import { deregisterComponent } from "./components.js";
 import { render as renderGeneric } from "./windows/window_generic.js";
 import { render as renderTextEditor } from "./windows/window_text_editor.js";
 import { render as renderChat } from "./windows/window_chat.js";
@@ -188,3 +189,11 @@ export function initWindowResize() {
     document.addEventListener("pointerup", onUp, { once: true });
   });
 }
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".js-close");
+  if (!btn) return;
+  const win = btn.closest(".miniwin");
+  if (!win) return;
+  deregisterComponent(win.dataset.id);
+});
