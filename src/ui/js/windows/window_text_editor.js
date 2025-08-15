@@ -22,12 +22,27 @@ export function render(cfg = {}, winId) {
   const ctx = {
     winId,
     getContent: () => ta.value,
-    setContent: (s) => { ta.value = s; }
+    setContent: (s) => { ta.value = s; },
+    close: () => {
+      const win = document.getElementById(winId);
+      if (!win) return;
+      const wrap = win.closest(".modal-wrap");
+      if (wrap) wrap.remove();
+      else win.remove();
+    }
   };
 
   function makeButton(btn) {
     const label = btn.icon || btn.label || "";
-    const b = el("button", { class: "icon-btn", title: btn.title || label }, [label]);
+    let cls = "btn";
+    if (btn.icon && !btn.label) {
+      cls = "icon-btn";
+    } else if (btn.variant === "primary") {
+      cls = "btn btn-primary";
+    } else if (btn.variant === "danger") {
+      cls = "btn btn-danger";
+    }
+    const b = el("button", { class: cls, title: btn.title || label }, [label]);
     b.addEventListener("click", () => btn.onClick?.(ctx));
     return b;
   }
@@ -46,7 +61,11 @@ export function render(cfg = {}, winId) {
     top.unshift({
       id: "save",
       label: cfg.saveButton?.label || "Save",
-      onClick: () => cfg.onSave?.({ id: winId, content: ta.value })
+      variant: "primary",
+      onClick: async () => {
+        await cfg.onSave?.({ id: winId, content: ta.value });
+        ctx.close();
+      }
     });
   }
 
