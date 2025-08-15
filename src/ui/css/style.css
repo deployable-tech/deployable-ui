@@ -181,7 +181,11 @@ html, body {
 .miniwin.collapsed .content { grid-template-rows: 0fr; padding-top: 0; padding-bottom: 0; opacity: .0; }
 .miniwin.collapsed .win-resizer-y { display: none; }
 .miniwin .content-inner { overflow: auto; min-height: 0; }
-.miniwin .content-inner.is-chat { overflow: hidden; }
+.miniwin .content-inner.is-chat {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
 .win-resizer-y {
   height: 8px;
@@ -333,6 +337,7 @@ html, body {
   border-radius: 10px;
   background: hsl(var(--h) var(--sat) var(--l-panel));
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 .chat-msg.is-user { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 3%)); align-self: flex-end; }
 .chat-msg.is-assistant { background: hsl(var(--h) var(--sat) calc(var(--l-panel) + 1%)); }
@@ -347,6 +352,10 @@ html, body {
   margin-top: 8px;
   width: 100%;
   flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  background: hsl(var(--h) var(--sat) calc(var(--l-bg) + 2%));
+  padding-bottom: 8px;
 }
 .chat-window .chat-input .input { width: 100%; min-width: 0; }
 
