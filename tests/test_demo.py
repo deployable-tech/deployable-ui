@@ -9,7 +9,7 @@ import demo.server as server
 
 
 def test_index_file_contains_title():
-    index_path = Path(server.DEMO_DIR) / "index.html"
+    index_path = server.DEMO_INDEX
     assert index_path.exists()
     contents = index_path.read_text()
     assert "Deployable UI Demo" in contents

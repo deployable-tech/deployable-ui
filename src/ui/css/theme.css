@@ -10,6 +10,8 @@
   /* Layout & typography */
   --titlebar-height: 36px;
   --font-size-base: 14px;
+  --font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+  --win-gap: 12px;
 
   /* Base lightness stops (dark theme) */
   --l-bg: 7%;
@@ -32,7 +34,7 @@
   --accent-2:  hsl(calc(var(--h) + 80) 60% 60%);
 
   --shadow: 0 10px 30px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.25);
-  --radius: 16px;
+  --win-radius: 16px;
   --backdrop: rgba(2, 6, 12, .55);
 }
 

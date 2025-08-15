@@ -77,7 +77,15 @@ Selected files are kept in memory until cleared. The returned element exposes `g
 
 CSS lives under `src/ui/css`. Theme variables can be read and written with `getVar` and `setVar` from `theme.js`. Calling `applyThemeSettings` with an object, JSON string, or nothing will apply stored settings from `localStorage`.
 
-Applications can define their own themes by writing CSS variables such as `--accent`, `--bg`, or `--text`. Persist user choices by saving a JSON object to `localStorage` under the `theme` key and invoking `applyThemeSettings()` on startup.
+Common variables include:
+
+- `--font-family` – base font stack for the application.
+- `--font-size-base` – root font size.
+- `--win-gap` – vertical spacing between docked windows.
+- `--win-radius` – border radius applied to window panels.
+- Palette values like `--h`, `--accent` or `--bg` for color customization.
+
+Applications can define their own themes by writing these CSS variables. Persist user choices by saving a JSON object to `localStorage` under the `theme` key and invoking `applyThemeSettings()` on startup.
 
 ## Extending the Library
 
