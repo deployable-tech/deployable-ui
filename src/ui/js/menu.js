@@ -3,6 +3,7 @@ export function initMenu(onAction, triggerId = "menu-trigger", dropdownId = "men
   const trigger = document.getElementById(triggerId);
   const dropdown = document.getElementById(dropdownId);
   if (!trigger || !dropdown) return;
+  const openMenus = window.__openMenus || (window.__openMenus = new Set());
 
   function setInert(el, value) {
     try {
@@ -21,12 +22,23 @@ export function initMenu(onAction, triggerId = "menu-trigger", dropdownId = "men
   }
 
   function open() {
+    openMenus.forEach((fn) => fn());
+    openMenus.clear();
     setInert(dropdown, false);
     dropdown.classList.add("open");
     trigger.setAttribute("aria-expanded", "true");
     dropdown.setAttribute("aria-hidden", "false");
+    const rect = dropdown.getBoundingClientRect();
+    if (rect.right > window.innerWidth) {
+      dropdown.style.left = "auto";
+      dropdown.style.right = "0";
+    } else {
+      dropdown.style.left = "";
+      dropdown.style.right = "";
+    }
     // Optional: send focus into the menu for keyboard users
     focusFirstItem();
+    openMenus.add(close);
   }
 
   function close() {
@@ -42,7 +54,10 @@ export function initMenu(onAction, triggerId = "menu-trigger", dropdownId = "men
     dropdown.classList.remove("open");
     trigger.setAttribute("aria-expanded", "false");
     dropdown.setAttribute("aria-hidden", "true");
+    dropdown.style.left = "";
+    dropdown.style.right = "";
     setInert(dropdown, true);
+    openMenus.delete(close);
   }
 
   // Init state: hidden & inert

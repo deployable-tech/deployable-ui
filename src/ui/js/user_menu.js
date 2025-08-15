@@ -33,16 +33,28 @@ export function createUserMenu(opts = {}) {
     role: "menu",
     "aria-hidden": "true"
   });
+  const openMenus = window.__openMenus || (window.__openMenus = new Set());
 
   function close() {
     dropdown.classList.remove("open");
     trigger.setAttribute("aria-expanded", "false");
     dropdown.setAttribute("aria-hidden", "true");
+    dropdown.style.left = "";
+    dropdown.style.right = "";
+    openMenus.delete(close);
   }
   function open() {
+    openMenus.forEach((fn) => fn());
+    openMenus.clear();
     dropdown.classList.add("open");
     trigger.setAttribute("aria-expanded", "true");
     dropdown.setAttribute("aria-hidden", "false");
+    const rect = dropdown.getBoundingClientRect();
+    if (rect.right > window.innerWidth) {
+      dropdown.style.left = "auto";
+      dropdown.style.right = "0";
+    }
+    openMenus.add(close);
   }
 
   trigger.addEventListener("click", (e) => {
