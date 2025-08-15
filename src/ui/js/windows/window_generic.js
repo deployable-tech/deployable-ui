@@ -9,7 +9,7 @@ export function render(config, winId) {
     const label = e.label || e.name || baseId;
     const opts = {
       showLabel: e.showLabel !== false,
-      labelPosition: e.labelPosition || "left",
+      labelPosition: e.labelPosition || e.label_position || "left",
     };
 
     if (e.type === "item_list") {
