@@ -77,7 +77,17 @@ html, body {
 
 /* ===== Columns & Splitter ===== */
 .columns { position: relative; display: flex; flex: 1 1 auto; min-height: 0; overflow: hidden; }
-.col { position: relative; flex: 1 1 50%; min-width: 200px; padding: 16px; overflow: auto; border-right: 1px solid var(--border); }
+.col {
+  position: relative;
+  flex: 1 1 50%;
+  min-width: 200px;
+  padding: var(--win-gap-vertical) var(--win-gap-horizontal);
+  overflow: auto;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--win-gap-vertical);
+}
 .col:last-child { border-right: none; }
 
 /* Splitter — themed & interactive */
@@ -134,7 +144,7 @@ html, body {
   border-radius: var(--win-radius);
   box-shadow: var(--shadow);
   overflow: hidden;
-  margin: var(--win-gap) 0;
+  margin: 0;
   outline: none;
   display: flex;
   flex-direction: column;

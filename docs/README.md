@@ -81,9 +81,11 @@ Common variables include:
 
 - `--font-family` – base font stack for the application.
 - `--font-size-base` – root font size.
-- `--win-gap` – vertical spacing between docked windows.
+- `--win-gap-vertical` / `--win-gap-horizontal` – spacing between docked windows and column edges.
 - `--win-radius` – border radius applied to window panels.
-- Palette values like `--h`, `--accent` or `--bg` for color customization.
+- Palette values like `--base-color`, `--positive-accent`, `--neutral-accent` or `--negative-accent` for color customization.
+
+The helper `generatePalette` in `theme.js` can derive matching accent colors from a base hue.
 
 Applications can define their own themes by writing these CSS variables. Persist user choices by saving a JSON object to `localStorage` under the `theme` key and invoking `applyThemeSettings()` on startup.
 

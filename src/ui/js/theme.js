@@ -34,3 +34,14 @@ export function applyThemeSettings(source) {
   });
 }
 
+// Derive accent colors from a base hue. Optional positive/negative hues
+// allow overriding the default green/red pair. The neutral accent is
+// computed opposite the midpoint between the positive and negative hues.
+export function generatePalette(baseHue, positiveHue, negativeHue) {
+  const pos = positiveHue ?? (baseHue + 120) % 360;
+  const neg = negativeHue ?? (baseHue + 300) % 360;
+  setVar('--h', baseHue);
+  setVar('--positive-h', pos);
+  setVar('--negative-h', neg);
+}
+
