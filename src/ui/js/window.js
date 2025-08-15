@@ -62,6 +62,7 @@ export function createMiniWindowFromConfig(config) {
   const type = config.window_type || "window_generic";
   const renderer = WindowTypes[type];
   if (!renderer) throw new Error(`Unknown window_type: ${type}`);
+  if (type === "window_chat") contentInner.classList.add("is-chat");
   const body = renderer(config, winId);
   contentInner.appendChild(body);
 

@@ -181,6 +181,7 @@ html, body {
 .miniwin.collapsed .content { grid-template-rows: 0fr; padding-top: 0; padding-bottom: 0; opacity: .0; }
 .miniwin.collapsed .win-resizer-y { display: none; }
 .miniwin .content-inner { overflow: auto; min-height: 0; }
+.miniwin .content-inner.is-chat { overflow: hidden; }
 
 .win-resizer-y {
   height: 8px;
