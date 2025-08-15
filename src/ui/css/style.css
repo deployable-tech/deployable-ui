@@ -160,7 +160,7 @@ html, body {
 }
 .miniwin.dragging .titlebar { cursor: grabbing; }
 .miniwin .titlebar .title { font-weight: 600; font-size: 14px; letter-spacing: .25px; }
-.miniwin .titlebar .actions { display: flex; gap: 6px; }
+.miniwin .titlebar .actions { display: flex; gap: calc(var(--titlebar-height) / 6); }
 
 .icon-btn {
   appearance: none; border: 1px solid var(--border);
@@ -170,6 +170,12 @@ html, body {
 }
 .icon-btn:hover { color: var(--text); border-color: hsl(var(--h) var(--sat) calc(var(--l-border) + 8%)); }
 .icon-btn:active { transform: translateY(1px); }
+
+.miniwin .titlebar .icon-btn {
+  border-radius: calc(var(--titlebar-height) / 3.6);
+  padding: calc(var(--titlebar-height) / 6) calc(var(--titlebar-height) / 4.5);
+  font-size: calc(var(--titlebar-height) / 3);
+}
 
 .miniwin .content {
   padding: 14px;

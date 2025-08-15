@@ -8,7 +8,7 @@
   --txt: 92%;        /* text lightness */
 
   /* Layout & typography */
-  --titlebar-height: 36px;
+  --titlebar-height: calc(var(--font-size-base) * 2.5714);
   --font-size-base: 14px;
   --font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
   --win-gap-vertical: 12px;
