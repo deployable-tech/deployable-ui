@@ -295,4 +295,15 @@ initMenu((action) => {
       ]
     });
   }
+  if (action === "spawn-theme-editor") {
+    counter++;
+    spawnWindow({
+      id: `theme_${counter}`,
+      window_type: "window_theme_editor",
+      title: "Theme Editor",
+      col: "right",
+      resizable: true,
+      dockable: true
+    });
+  }
 });

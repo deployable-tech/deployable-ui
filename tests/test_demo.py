@@ -13,6 +13,7 @@ def test_index_file_contains_title():
     assert index_path.exists()
     contents = index_path.read_text()
     assert "Deployable UI Demo" in contents
+    assert "Theme Editor" in contents
 
 
 def test_health_function():

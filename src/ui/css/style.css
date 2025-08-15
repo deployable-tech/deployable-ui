@@ -234,6 +234,20 @@ html, body {
 }
 .textarea { min-height: 120px; resize: vertical; }
 
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.color-picker .color-input {
+  padding: 0;
+  width: 40px;
+  height: 28px;
+  border: none;
+  background: transparent;
+}
+
+
 .btn {
   appearance: none; border: 1px solid hsl(var(--h) var(--sat) calc(var(--l-border) + 0%));
   background: hsl(var(--h) var(--sat) var(--l-panel));
