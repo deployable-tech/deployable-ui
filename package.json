@@ -1,0 +1,12 @@
+{
+  "name": "deployable-ui",
+  "version": "1.0.0",
+  "description": "Minimal JavaScript UI framework with demo server",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/smoke.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}
