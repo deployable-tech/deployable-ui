@@ -4,13 +4,13 @@ This directory documents the universal vanilla JS UI framework. It provides prim
 
 ## Architecture
 - **Window shell** – created via `spawnWindow` and controlled through `WindowController`.
-- **Components** – forms, lists, selects and modals live under `src/ui/components`.
-- **Styles** – baseline CSS in `src/ui/styles`.
+- **Components** – forms, lists, selects and modals live under `src/ui/js/components`.
+- **Styles** – baseline CSS in `src/ui/css`.
 - **Events** – components communicate through callbacks or controller events (no global bus).
 
 ## Window Guide
 ```js
-import { spawnWindow } from "../src/ui/framework/window.js";
+import { spawnWindow } from "../src/ui/js/framework/window.js";
 const win = spawnWindow({ title: "Hello" });
 win.on("resize", b => console.log(b.width));
 ```

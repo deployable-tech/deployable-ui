@@ -1,6 +1,6 @@
-import { initWindowDnD } from "/static/js/dnd.js";
-import { initSplitter } from "/static/js/splitter.js";
-import { createMiniWindowFromConfig, initWindowResize, mountModal } from "/static/js/window.js";
+import { initWindowDnD } from "/static/ui/js/dnd.js";
+import { initSplitter } from "/static/ui/js/splitter.js";
+import { createMiniWindowFromConfig, initWindowResize, mountModal } from "/static/ui/js/window.js";
 
 export function initFramework() {
   initSplitter();
