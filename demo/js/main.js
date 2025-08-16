@@ -1,6 +1,6 @@
-import { initMenu } from "/static/js/menu.js";
-import { createUserMenu } from "/static/js/user_menu.js";
-import { getVar, setVar } from "/static/js/theme.js";
+import { initMenu } from "/static/ui/js/menu.js";
+import { createUserMenu } from "/static/ui/js/user_menu.js";
+import { getVar, setVar } from "/static/ui/js/theme.js";
 import { initFramework, spawnWindow } from "./framework.js";
 
 // Initialise basic UI helpers

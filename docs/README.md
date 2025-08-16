@@ -99,7 +99,7 @@ The demo includes a "Theme Editor" window reachable from the main menu. It surfa
 
 ## Demo Server
 
-The FastAPI server under `demo/server.py` serves the example application and exposes a `/health` endpoint for monitoring. It mounts the library assets at `/static` and demo scripts at `/js`.
+The FastAPI server under `demo/server.py` serves the example application and exposes a `/health` endpoint for monitoring. It mounts the library assets at `/static/ui` and demo scripts at `/js`.
 
 ## Testing
 

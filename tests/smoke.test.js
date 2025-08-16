@@ -1,9 +1,9 @@
 import { JSDOM } from 'jsdom';
-import { spawnWindow } from '../src/ui/framework/window.js';
-import { createForm } from '../src/ui/components/form.js';
-import { createItemList } from '../src/ui/components/list.js';
-import { openModal } from '../src/ui/components/modal.js';
-import { showToast, withAsyncState } from '../src/ui/components/toast.js';
+import { spawnWindow } from '../src/ui/js/framework/window.js';
+import { createForm } from '../src/ui/js/components/form.js';
+import { createItemList } from '../src/ui/js/components/list.js';
+import { openModal } from '../src/ui/js/components/modal.js';
+import { showToast, withAsyncState } from '../src/ui/js/components/toast.js';
 
 const dom = new JSDOM('<!doctype html><html><body></body></html>');
 global.window = dom.window;

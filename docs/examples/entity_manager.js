@@ -1,8 +1,8 @@
-import { spawnWindow } from "../../src/ui/framework/window.js";
-import { createForm } from "../../src/ui/components/form.js";
-import { createItemList } from "../../src/ui/components/list.js";
-import { createSelect } from "../../src/ui/components/select.js";
-import { showToast, withAsyncState } from "../../src/ui/components/toast.js";
+import { spawnWindow } from "../../src/ui/js/framework/window.js";
+import { createForm } from "../../src/ui/js/components/form.js";
+import { createItemList } from "../../src/ui/js/components/list.js";
+import { createSelect } from "../../src/ui/js/components/select.js";
+import { showToast, withAsyncState } from "../../src/ui/js/components/toast.js";
 
 export function openEntityManagerWindow(entity) {
   const win = spawnWindow({

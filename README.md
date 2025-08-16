@@ -55,7 +55,7 @@ browser to `http://127.0.0.1:8000/` to view the demo.
 ### Text Editor Window
 
 ```js
-import { createMiniWindowFromConfig } from "/static/js/window.js";
+import { createMiniWindowFromConfig } from "/static/ui/js/window.js";
 
 createMiniWindowFromConfig({
   window_type: "window_text_editor",
@@ -67,7 +67,7 @@ createMiniWindowFromConfig({
 ### List View Field
 
 ```js
-import { Field } from "/static/js/ui.js";
+import { Field } from "/static/ui/js/ui.js";
 
 const list = Field.create({
   type: "list_view",
@@ -88,7 +88,7 @@ createMiniWindowFromConfig({
 ### File Upload Field
 
 ```js
-import { Field } from "/static/js/ui.js";
+import { Field } from "/static/ui/js/ui.js";
 
 const uploader = Field.create({
   type: "file_upload",
@@ -101,7 +101,7 @@ const uploader = Field.create({
 ### User Menu
 
 ```js
-import { createUserMenu } from "/static/js/user_menu.js";
+import { createUserMenu } from "/static/ui/js/user_menu.js";
 
 const menu = createUserMenu({
   name: "Demo User",

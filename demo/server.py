@@ -3,7 +3,7 @@
 Serves:
   /           -> demo/html/index.html
   /js/*       -> files from demo/js
-  /static/*   -> library assets from src/ui (css/js)
+  /static/ui/*   -> library assets from src/ui (css/js)
 
 Keep demo-only code under demo/, library-only code under src/ui/.
 """
@@ -24,8 +24,8 @@ SRC_UI_DIR = REPO_ROOT / "src" / "ui"
 
 app = FastAPI(title="Deployable UI Demo")
 
-# Mount library assets at /static (CSS/JS used by the demo)
-app.mount("/static", StaticFiles(directory=SRC_UI_DIR), name="static")
+# Mount library assets at /static/ui (CSS/JS used by the demo)
+app.mount("/static/ui", StaticFiles(directory=SRC_UI_DIR), name="static_ui")
 
 # Mount demo JS at /js
 app.mount("/js", StaticFiles(directory=DEMO_JS_DIR), name="demo_js")
