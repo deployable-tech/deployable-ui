@@ -83,11 +83,18 @@ export const Field = {
     "submit_button": ({ id, text = "Submit" }) => {
       return el("button", { id, type: "submit", class: "btn" }, [text]);
     },
-    "text": ({ text = "", className = "" }) => {
-      const s = el("span", {}, [String(text)]);
-      if (className) s.className = className;
-      return s;
-    },
+ "text": ({ id, text = "", html = null, className = "" }) => {
+   const attrs = {};
+   if (id) {
+     attrs.id = id;
+     attrs["data-comp-id"] = id;
+   }
+   if (className) attrs.class = className;
+   const s = el("span", attrs, []);
+   if (html != null) s.innerHTML = html;
+   else s.appendChild(document.createTextNode(String(text)));
+   return s;
+ },
   },
   create: (cfg) => {
     const r = Field.renderers[cfg.type];
