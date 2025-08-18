@@ -1,5 +1,4 @@
 import { el, Field, fieldRow } from "../ui.js";
-import { createItemList } from "../components.js";
 
 export function render(config, winId) {
   const form = el("form", { class: "form", autocomplete: "off" });
@@ -13,7 +12,9 @@ export function render(config, winId) {
     };
 
     if (e.type === "item_list") {
-      const listEl = createItemList(config.id || winId, { ...e, id });
+      const listEl = Field.create({ type: 'item_list', ...e, id });
+      // expose element reference for later update() calls
+      e._el = listEl;
       form.appendChild(fieldRow(id, label, listEl, opts));
       return;
     }

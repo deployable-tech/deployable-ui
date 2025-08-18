@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { spawnWindow } from '../src/ui/js/framework/window.js';
 import { createForm } from '../src/ui/js/components/form.js';
-import { createItemList } from '../src/ui/js/components/list.js';
+import { renderItemList } from '../src/ui/js/components/list.js';
 import { openModal } from '../src/ui/js/components/modal.js';
 import { showToast, withAsyncState } from '../src/ui/js/components/toast.js';
 
@@ -24,7 +24,13 @@ async function aSyncTest(){
   form.form.dispatchEvent(new dom.window.Event('submit', { cancelable:true }));
   const listWrap = document.createElement('div');
   win.getContentEl().appendChild(listWrap);
-  createItemList({ target:listWrap, columns:[{key:'name', label:'Name'}], items:[{name:'A'}], actions:{} });
+  const listEl = renderItemList({ columns:[{key:'name', label:'Name'}], items:[{id:1,name:'A'},{id:2,name:'B'}], keyField:'id' });
+  listWrap.appendChild(listEl);
+  let sel = null;
+  listEl.on('selection:change', (e)=>{ sel = e.detail.selection; });
+  const firstRow = listEl.querySelector('tbody tr');
+  firstRow.dispatchEvent(new dom.window.Event('click', { bubbles:true }));
+  console.assert(sel && sel.name === 'A', 'selection event fired');
   const modal = win.openModal({ title:'Modal', content(){} });
   modal.close();
   await withAsyncState(Promise.resolve(), { onLoading:()=>{}, onError:()=>{}, onData:()=>{} });
