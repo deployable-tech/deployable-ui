@@ -103,6 +103,7 @@ export const Field = {
   }
 };
 
-Field.renderers["list_view"] = renderListView;
+Field.renderers["item_list"] = renderListView;
+Field.renderers["list_view"] = renderListView; // legacy alias
 Field.renderers["file_upload"] = renderFileUpload;
 Field.renderers["color_picker"] = renderColorPicker;
