@@ -576,6 +576,31 @@ html, body {
 .item-list button {
   margin-right: 4px;
 }
+
+.item-list tr:hover,
+.item-list .card-row:hover,
+.item-list li:hover {
+  background: #f5f5f5;
+}
+
+.item-list tr.is-selected,
+.item-list .card-row.is-selected,
+.item-list li.is-selected {
+  background: #cce5ff;
+}
+
+.item-list .list-toolbar {
+  margin-bottom: 4px;
+}
+
+.item-list .li-actions {
+  text-align: right;
+}
+
+.item-list .li-actions button {
+  margin-left: 4px;
+  margin-right: 0;
+}
 .modal-overlay {
   position: fixed;
   inset: 0;

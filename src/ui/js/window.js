@@ -211,3 +211,10 @@ document.addEventListener("click", (e) => {
   if (!win) return;
   deregisterComponent(win.dataset.id);
 });
+
+export const spawnWindow = (config) => createMiniWindowFromConfig(config);
+export default spawnWindow;
+
+if (typeof window !== 'undefined') {
+  window.spawnWindow = window.spawnWindow || spawnWindow; // legacy global
+}

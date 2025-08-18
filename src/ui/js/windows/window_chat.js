@@ -72,19 +72,41 @@ export function render(config = {}, winId) {
   textarea.addEventListener("input", resize);
   setTimeout(resize, 0);
 
-  // --- Message helpers (from codex) ---
-  let messages = Array.isArray(cfg.messages) ? [...cfg.messages] : [];
+// --- Sanitizer hook (optional: uses DOMPurify if present, or cfg.sanitizeHTML)
+const sanitizeHTML =
+  (typeof cfg.sanitizeHTML === "function" && cfg.sanitizeHTML) ||
+  (window.DOMPurify ? (h) => window.DOMPurify.sanitize(h) : (h) => h);
 
-  function appendMessage(msg) {
-    const role = msg.role || "assistant";
-    const node = el("div", { class: `chat-msg is-${role}` });
-    const content = msg.content;
-    if (content instanceof HTMLElement) node.appendChild(content);
-    else node.append(String(content ?? ""));
-    if (msg.meta) node.appendChild(el("div", { class: "chat-meta" }, [msg.meta]));
-    log.appendChild(node);
-    if (cfg.autoScroll !== false) log.scrollTop = log.scrollHeight;
+// --- Message helpers (from codex) ---
+let messages = Array.isArray(cfg.messages) ? [...cfg.messages] : [];
+
+function appendMessage(msg) {
+  const role = msg.role || "assistant";
+  const node = el("div", { class: `chat-msg is-${role}` });
+  const body = el("div", { class: "chat-body" });
+
+  const content = msg.content;
+
+  if (content instanceof HTMLElement) {
+    body.appendChild(content);
+  } else if (msg.html === true || cfg.renderHTML === true) {
+    // Render as HTML (sanitized if available)
+    const html = sanitizeHTML(String(content ?? ""));
+    body.innerHTML = html;
+  } else {
+    // Safe default: plain text
+    body.textContent = String(content ?? "");
   }
+
+  node.appendChild(body);
+
+  if (msg.meta) {
+    node.appendChild(el("div", { class: "chat-meta" }, [msg.meta]));
+  }
+
+  log.appendChild(node);
+  if (cfg.autoScroll !== false) log.scrollTop = log.scrollHeight;
+}
 
   const ctx = {
     winId,
